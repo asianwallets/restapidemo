@@ -1,17 +1,18 @@
-package com.asianwallets.restapi.other;
+package com.asianwallets.restapi.vo;
 
 import com.alibaba.fastjson.JSONObject;
 
 /**
- * @description:
- * @author: YangXu
- * @create: 2019-03-20 17:10
- **/
-
+ * In response to the results
+ *
+ * @Author red
+ * @Date: 2019/7/17 10:55
+ * @Description: In response to the results
+ */
 public class HttpResponse {
 
-    public JSONObject jsonObject;
-    public Integer httpStatus;
+    private JSONObject jsonObject;
+    private Integer httpStatus;
 
     public JSONObject getJsonObject() {
         return jsonObject;
