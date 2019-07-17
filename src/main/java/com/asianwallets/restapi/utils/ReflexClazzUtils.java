@@ -20,7 +20,7 @@ public class ReflexClazzUtils {
      * @return Gets the attribute name and value in the object
      */
     public static Map<String, String> getFieldNames(Object obj) {
-        Map<String, String> map = new LinkedHashMap<>();
+        Map map = new LinkedHashMap<String, String>();
         Field[] fields = obj.getClass().getDeclaredFields();
         for (int i = 0, len = fields.length; i < len; i++) {
             try {

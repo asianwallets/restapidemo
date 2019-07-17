@@ -1,5 +1,8 @@
 package com.asianwallets.restapi.utils;
 
+import org.apache.commons.beanutils.PropertyUtilsBean;
+
+import java.beans.PropertyDescriptor;
 import java.util.*;
 
 /**
@@ -24,6 +27,43 @@ public class SignUtils {
         //Sort,empty,and sort property values alphabetically by property name
         String signature = getSignStr(paramMap);
         return Md5Util.getMD5String(signature + md5Key);
+    }
+
+    /**
+     * Generate online signature
+     *
+     * @param obj        Input entity
+     * @param privateKey privateKey
+     * @return Generate online signature
+     */
+    public static String createOnelineSign(Object obj, String privateKey) {
+        HashMap<String, String> map = beanToMap(obj);
+        byte[] msg = getSignStr(map).getBytes();
+        String signMsg = null;
+        try {
+            signMsg = RSAUtils.sign(msg, privateKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return signMsg;
+    }
+
+
+    public static HashMap<String, String> beanToMap(Object obj) {
+        HashMap<String, String> params = new HashMap<String, String>(0);
+        try {
+            PropertyUtilsBean propertyUtilsBean = new PropertyUtilsBean();
+            PropertyDescriptor[] descriptors = propertyUtilsBean.getPropertyDescriptors(obj);
+            for (int i = 0; i < descriptors.length; i++) {
+                String name = descriptors[i].getName();
+                if (!"class".equals(name)) {
+                    params.put(name, String.valueOf(propertyUtilsBean.getNestedProperty(obj, name)));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
     }
 
     /**

@@ -32,7 +32,7 @@ public class HttpClientUtils {
     public static HttpResponse reqPost(String url, Object params, Map<String, Object> headMap) {
         HttpResponse httpResponse = new HttpResponse();
         HttpClient client = new HttpClient();
-        log.info("HttpClientUtils-reqPost]==>请求参数, url: {}, params: {}, headMap: {}", url, params, headMap);
+        log.info("HttpClientUtils-reqPost]==>Request parameter, url: {}, params: {}, headMap: {}", url, params, headMap);
 
         try {
             PostMethod method = new PostMethod(url);
