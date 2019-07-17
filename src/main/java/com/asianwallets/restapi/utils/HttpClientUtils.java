@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +72,7 @@ public class HttpClientUtils {
                 httpResponse.setHttpStatus(httpStatus);
                 return httpResponse;
             }
-        } catch (HttpException e) {
-            log.error("[HttpClientUtils-reqPost]==>异常：{}", e.getMessage());
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("[HttpClientUtils-reqPost]==>异常：{}", e.getMessage());
         }
         return httpResponse;
