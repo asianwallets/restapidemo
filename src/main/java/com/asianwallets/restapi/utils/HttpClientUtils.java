@@ -74,6 +74,4 @@ public class HttpClientUtils {
         }
         return httpResponse;
     }
-
-
 }
