@@ -13,8 +13,8 @@ import java.util.Date;
 /**
  * Online trading demo
  * The input parameters of this demo call API are required parameters.
- * Please refer to the offline documentation for non-required parameters of API
- * We offline document address:  https://pag.asianwallets.com/api/zh-cn/
+ * Please refer to the online documentation for non-required parameters of API
+ * We online document address:  https://pag.asianwallets.com/api/zh-cn/
  *
  * @Author blue
  * @Date: 2019/7/17 10:55
