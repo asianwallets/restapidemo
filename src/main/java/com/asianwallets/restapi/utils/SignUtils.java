@@ -1,5 +1,9 @@
 package com.asianwallets.restapi.utils;
 
+import com.asianwallets.restapi.dto.LogisticsBachDTO;
+import com.asianwallets.restapi.dto.OrderLogisticsBachDTO;
+import com.asianwallets.restapi.dto.PayOutDTO;
+import com.asianwallets.restapi.dto.PayOutRequestDTO;
 import org.apache.commons.beanutils.PropertyUtilsBean;
 
 import java.beans.PropertyDescriptor;
@@ -66,6 +70,23 @@ public class SignUtils {
         return params;
     }
 
+    public static HashMap<String, Object> beanToObjMap(Object obj) {
+        HashMap<String, Object> params = new HashMap<String, Object>(0);
+        try {
+            PropertyUtilsBean propertyUtilsBean = new PropertyUtilsBean();
+            PropertyDescriptor[] descriptors = propertyUtilsBean.getPropertyDescriptors(obj);
+            for (int i = 0; i < descriptors.length; i++) {
+                String name = descriptors[i].getName();
+                if (!"class".equals(name)) {
+                    params.put(name, propertyUtilsBean.getNestedProperty(obj, name));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return params;
+    }
+
     /**
      * Sort, empty, and sort property values alphabetically by property name
      *
@@ -98,5 +119,79 @@ public class SignUtils {
 
         }
         return signStr;
+    }
+
+    /**
+     * Signature method for remittance
+     *
+     * @param dto
+     */
+    public static void generateListSignaturePay(PayOutDTO dto) {
+        //MD5key in the background of merchants
+        String MD5KEY = "XXXXXXX";
+        //Merchants'own private keys
+        String RsaPrivateKey = "YYYYYYY";
+        List<PayOutRequestDTO> payOutRequestDTOs = dto.getPayOutRequestDTOs();
+        StringBuilder sb = new StringBuilder();
+        for (Object o : payOutRequestDTOs) {
+            HashMap<String, Object> dtoMap = beanToObjMap(o);
+            HashMap<String, String> map = new HashMap<>();
+            Set<String> keySet = dtoMap.keySet();
+            for (String dtoKey : keySet) {
+                map.put(dtoKey, String.valueOf(dtoMap.get(dtoKey)));
+            }
+            sb.append(getSignStr(map));
+        }
+        System.out.println("---------------Pre-signature original---------------:" + sb);
+        byte[] msg = sb.toString().getBytes();
+        String rsaString = null;
+        String originalMd5 = sb.toString() + MD5KEY;
+        System.out.println("-------------MD5 Pre-Encryption Text-------------: " + originalMd5);
+        String md5String = Md5Util.getMD5String(originalMd5);
+        try {
+            rsaString = RSAUtils.sign(msg, RsaPrivateKey);
+        } catch (Exception e) {
+            // doing something
+        }
+        System.out.println("-------------RSA-------------rsa:" + rsaString);
+        System.out.println("-------------MD5-------------md5String:{} " + md5String);
+
+    }
+
+    /**
+     * Signature Method for Batch Updating Logistics Information
+     *
+     * @param dto
+     */
+    public static void generateListSignatureLogistics(OrderLogisticsBachDTO dto) {
+        //MD5key in the background of merchants
+        String MD5KEY = "XXXXXXX";
+        //Merchants'own private keys
+        String RsaPrivateKey = "YYYYYYY";
+        List<LogisticsBachDTO> logisticsBachDTOs = dto.getLogisticsBachDTOs();
+        StringBuilder sb = new StringBuilder();
+        for (Object o : logisticsBachDTOs) {
+            HashMap<String, Object> dtoMap = beanToObjMap(o);
+            HashMap<String, String> map = new HashMap<>();
+            Set<String> keySet = dtoMap.keySet();
+            for (String dtoKey : keySet) {
+                map.put(dtoKey, String.valueOf(dtoMap.get(dtoKey)));
+            }
+            sb.append(getSignStr(map));
+        }
+        System.out.println("---------------Pre-signature original---------------:" + sb);
+        byte[] msg = sb.toString().getBytes();
+        String rsaString = null;
+        String originalMd5 = sb.toString() + MD5KEY;
+        System.out.println("-------------MD5 Pre-Encryption Text-------------: " + originalMd5);
+        String md5String = Md5Util.getMD5String(originalMd5);
+        try {
+            rsaString = RSAUtils.sign(msg, RsaPrivateKey);
+        } catch (Exception e) {
+            // doing something
+        }
+        System.out.println("-------------RSA-------------rsa:" + rsaString);
+        System.out.println("-------------MD5-------------md5String:{} " + md5String);
+
     }
 }
